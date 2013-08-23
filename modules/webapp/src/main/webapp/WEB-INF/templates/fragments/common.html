@@ -39,6 +39,12 @@
                                     <span th:text="#{app.page.vote}"></span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="#" th:href="@{/addBook}" th:if="${currentUser.manager}">
+                                    <i class="icon-plus-sign"></i>
+                                    <span th:text="#{app.page.offer}"></span>
+                                </a>
+                            </li>
                         </ul>
 
                         <div class="pull-right">

@@ -28,5 +28,6 @@
     <mvc:annotation-driven />
 
     <context:component-scan base-package="grytsenko.library.view" />
+    <context:component-scan base-package="grytsenko.library.validator"/>
 
 </beans>

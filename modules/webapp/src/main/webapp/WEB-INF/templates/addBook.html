@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/common :: head" />
+
+<body>
+<div th:include="fragments/common :: navbar"></div>
+
+<div class="container">
+
+    <form name="addBookForm" th:object="${bookDetails}" method="POST" class="form-signin">
+        <h2 class="form-signin-heading" th:text="#{add.book.title}">Add book</h2>
+
+        <input name="authors" type="text" class="input-block-level"
+             th:placeholder="#{add.book.authors}" th:field="*{authors}"/>
+        <p class="alert-error" th:errors="*{authors}"></p>
+
+        <input name="title" type="text" class="input-block-level"
+            th:placeholder="#{add.book.titles}" th:field="*{title}"/>
+        <p class="alert-error" th:errors="*{title}"></p>
+
+        <input name="publisher" type="text" class="input-block-level"
+            th:placeholder="#{add.book.publisher}" th:field="*{publisher}"/>
+        <p class="alert-error" th:errors="*{publisher}"></p>
+
+        <input name="isbn" type="text" class="input-block-level"
+            th:placeholder="#{add.book.isbn}" th:field="*{isbn}"/>
+        <p class="alert-error" th:errors="*{isbn}"></p>
+
+        <input name="language" type="text" class="input-block-level"
+            th:placeholder="#{add.book.language}" th:field="*{language}"/>
+        <p class="alert-error" th:errors="*{language}"></p>
+
+        <input name="imageUrl" type="text" class="input-block-level"
+            th:placeholder="#{add.book.imageUrl}" th:field="*{imageUrl}"/>
+        <p class="alert-error" th:errors="*{imageUrl}"></p>
+
+        <input name="year" type="text" class="input-block-level"
+            th:placeholder="#{add.book.year}" th:field="*{year}"/>
+        <p class="alert-error" th:errors="*{year}"></p>
+
+        <input name="thumbnailUrl" type="text" class="input-block-level"
+            th:placeholder="#{add.book.thumbnailUrl}" th:field="*{thumbnailUrl}"/>
+        <p class="alert-error" th:errors="*{thumbnailUrl}"></p>
+
+        <input name="pages" type="text" class="input-block-level"
+            th:placeholder="#{add.book.pages}" th:field="*{pages}"/>
+        <p class="alert-error" th:errors="*{pages}"></p>
+
+        <button name="submit" type="submit" class="btn btn-primary"
+                th:text="#{add.book}">Add book</button>
+    </form>
+</div>
+
+<div th:include="fragments/common :: scripts"></div>
+</body>
+
+</html>

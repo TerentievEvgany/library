@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.persistence.CascadeType;
 
 /**
  * Users can vote for offered book.
@@ -30,7 +31,7 @@ public class OfferedBook implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "details_id", nullable = false)
     private BookDetails details;
 

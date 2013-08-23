@@ -25,6 +25,8 @@ public class BookDetails implements Serializable {
     public static final int ISBN_LENGTH_MAX = 20;
     public static final int LANGUAGE_LENGTH_MAX = 20;
     public static final int URL_LENGTH_MAX = 200;
+    public static final int YEAR_LENGTH_MAX = 4;
+    public static final int PAGES_LENGTH_MAX = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

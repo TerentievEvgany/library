@@ -84,4 +84,13 @@ public class ManageOfferedBooksService {
         delete(book, offeredBooksRepository);
     }
 
+    @Transactional
+    public OfferedBook add(OfferedBook book, User manager)
+            throws BookNotUpdatedException {
+        if (!manager.isManager()) {
+            throw new BookNotUpdatedException("User has no permissions.");
+        }
+
+        return save(book, offeredBooksRepository);
+    }
 }
