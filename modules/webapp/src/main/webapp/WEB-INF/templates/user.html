@@ -8,39 +8,19 @@
     <div th:include="fragments/common :: navbar"></div>
 
     <div class="container">
-        <div class="row-fluid">
-            <!-- Details. -->
-            <ul class="unstyled" th:object="${currentUser}">
-                <li>
-                    <strong th:text="#{user.details.firstname}"></strong>
-                    <span th:text="*{firstname}"></span>
-                </li>
-                <li>
-                    <strong th:text="#{user.details.lastname}"></strong>
-                    <span th:text="*{lastname}"></span>
-                </li>
-                <li>
-                    <strong th:text="#{user.details.mail}"></strong>
-                    <span th:text="*{mail}"></span>
-                </li>
-            </ul>
-        </div>
-
-        <div th:if="${!usedBooks.isEmpty()}">
-            <hr />
-
-            <!-- Used Books -->
-            <h4 th:text="#{book.message.used}"></h4>
-            <div class="row-fluid" th:include="fragments/books :: booksList"
+        <div class="panel panel-info" th:if="${!usedBooks.isEmpty()}">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:text="#{book.message.used}"></h3>
+            </div>
+            <div class="panel-body" th:include="fragments/books :: booksList"
                 th:with="books=${usedBooks}"></div>
         </div>
 
-        <div th:if="${!expectedBooks.isEmpty()}">
-            <hr />
-
-            <!-- Expected Books -->
-            <h4 th:text="#{book.message.expected}"></h4>
-            <div class="row-fluid" th:include="fragments/books :: booksList"
+        <div class="panel panel-info" th:if="${!expectedBooks.isEmpty()}">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:text="#{book.message.expected}"></h3>
+            </div>
+            <div class="panel-body" th:include="fragments/books :: booksList"
                 th:with="books=${expectedBooks}"></div>
         </div>
 

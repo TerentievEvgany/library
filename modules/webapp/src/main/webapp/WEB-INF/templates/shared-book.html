@@ -8,78 +8,63 @@
     <div th:include="fragments/common :: navbar"></div>
 
     <div class="container">
-        <div class="row-fluid" th:include="fragments/books :: bookDetails"
+        <div class="well" th:include="fragments/books :: bookDetails"
             th:with="details=${book.details}"></div>
 
-        <hr />
-
-        <div class="row-fluid" th:if="${bookNotUpdated}">
-            <div class="alert alert-warning">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <span th:text="#{warning.book.not.updated}"></span>
-            </div>
+        <div class="alert alert-warning alert-dismissable"
+            th:if="${bookNotUpdated}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:text="#{warning.book.not.updated}"></span>
         </div>
 
-        <div class="row-fluid">
-            <p class="text-info" th:if="${book.available}"
-                th:text="#{book.message.available}"></p>
-            <p class="text-info" th:object="${book}" th:if="${book.reserved}"
-                th:text="#{book.message.reserved(*{usedBy.readableName}, *{usedWithin()})}"></p>
-            <p class="text-info" th:object="${book}" th:if="${book.borrowed}"
-                th:text="#{book.message.borrowed(*{usedBy.readableName}, *{usedWithin()})}"></p>
-        </div>
+        <p class="text-info" th:if="${book.available}"
+            th:text="#{book.message.available}"></p>
+        <p class="text-info" th:object="${book}" th:if="${book.reserved}"
+            th:text="#{book.message.reserved(*{usedBy.readableName}, *{usedWithin()})}"></p>
+        <p class="text-info" th:object="${book}" th:if="${book.borrowed}"
+            th:text="#{book.message.borrowed(*{usedBy.readableName}, *{usedWithin()})}"></p>
 
-        <div class="row-fluid">
-            <form method="POST">
-                <div class="pull-right">
-                    <p>
-                        <button name="subscribe" type="submit"
-                            class="btn btn-info"
-                            th:if="${!book.hasSubscriber(currentUser)}">
-                            <i class="icon-envelope"></i>
-                            <span th:text="#{book.action.subscribe}"></span>
-                        </button>
-                        <button name="unsubscribe" type="submit"
-                            class="btn btn-info"
-                            th:if="${book.hasSubscriber(currentUser)}">
-                            <i class="icon-envelope"></i>
-                            <span th:text="#{book.action.unsubscribe}"></span>
-                        </button>
-                    </p>
-                </div>
+        <form method="POST">
+            <div class="pull-right">
                 <p>
-                    <button name="remind" type="submit" class="btn btn-info"
-                        th:if="${book.isManagedBy(currentUser) and (book.reserved or book.borrowed)}">
-                        <i class="icon-bell"></i>
-                        <span th:text="#{book.action.remind}"></span>
-                    </button>
-
-                    <button name="reserve" type="submit" class="btn btn-info"
-                        th:if="${book.canBeReserved()}">
-                        <span th:text="#{book.action.reserve}"></span>
-                    </button>
-
-                    <button name="release" type="submit" class="btn btn-info"
-                        th:if="${book.canBeReleasedBy(currentUser)}">
-                        <span th:text="#{book.action.release}"></span>
-                    </button>
-                    <button name="takeOut" type="submit" class="btn btn-warning"
+                    <button name="takeOut" type="submit" class="btn btn-primary"
                         th:if="${book.canBeTakenOutBy(currentUser)}">
                         <span th:text="#{book.action.takeout}"></span>
                     </button>
                     <button name="takeBack" type="submit"
-                        class="btn btn-warning"
+                        class="btn btn-primary"
                         th:if="${book.canBeTakenBackBy(currentUser)}">
                         <span th:text="#{book.action.takeback}"></span>
                     </button>
-                </p>
-            </form>
-        </div>
 
-        <div class="row-fluid" th:if="${book.subscribersNum != 0}">
-            <p th:include="fragments/users :: usersList"
-                th:with="title='book.message.subscribers', users=${book.subscribers}"></p>
-        </div>
+                    <button name="remind" type="submit" class="btn btn-default"
+                        th:if="${book.isManagedBy(currentUser) and (book.reserved or book.borrowed)}">
+                        <span th:text="#{book.action.remind}"></span>
+                    </button>
+                </p>
+            </div>
+            <p>
+                <button name="reserve" type="submit" class="btn btn-primary"
+                    th:if="${book.canBeReserved()}">
+                    <span th:text="#{book.action.reserve}"></span>
+                </button>
+                <button name="release" type="submit" class="btn btn-warning"
+                    th:if="${book.canBeReleasedBy(currentUser)}">
+                    <span th:text="#{book.action.release}"></span>
+                </button>
+
+                <button name="subscribe" type="submit" class="btn btn-default"
+                    th:if="${!book.hasSubscriber(currentUser)}">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                    <span th:text="#{book.action.subscribe}"></span>
+                </button>
+                <button name="unsubscribe" type="submit" class="btn btn-default"
+                    th:if="${book.hasSubscriber(currentUser)}">
+                    <span class="glyphicon glyphicon-eye-close"></span>
+                    <span th:text="#{book.action.unsubscribe}"></span>
+                </button>
+            </p>
+        </form>
     </div>
 
     <div th:include="fragments/common :: scripts"></div>

@@ -4,20 +4,18 @@
 
     <div th:fragment="bookThumbnail">
         <div class="thumbnail" th:object="${details}">
-            <!-- Cover -->
             <div class="text-center">
                 <a th:href="${detailsUrl}">
                     <img onerror="$(this).hide();" th:src="*{thumbnailUrl}" />
                 </a>
             </div>
 
-            <!-- Details -->
             <div class="caption">
                 <h4 th:text="*{title}"></h4>
                 <p th:text="*{authors}"></p>
 
                 <p>
-                    <a class="btn btn-info" th:href="${detailsUrl}"
+                    <a class="btn btn-primary" th:href="${detailsUrl}"
                         th:text="#{book.action.view}"></a>
                 </p>
             </div>
@@ -33,12 +31,12 @@
                 </a>
             </div>
             <div class="media-body">
-                <h4 th:text="*{title}"></h4>
+                <h3 th:text="*{title}"></h3>
                 <p th:text="*{authors}"></p>
 
                 <br />
 
-                <ul class="unstyled">
+                <ul class="list-unstyled">
                     <li>
                         <strong th:text="#{book.details.publisher}"></strong>
                         <span th:text="*{publisher}"></span>
@@ -74,7 +72,7 @@
     </div>
 
     <div th:fragment="booksList">
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="book-title" th:text="#{user.book.title}"></th>
