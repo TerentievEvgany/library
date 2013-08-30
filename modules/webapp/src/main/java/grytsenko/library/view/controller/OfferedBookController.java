@@ -57,8 +57,8 @@ public class OfferedBookController {
     protected ManageOfferedBooksService manageOfferedBooksService;
 
     @ModelAttribute(CURRENT_USER_ATTR)
-    public User currentUser(Principal principal) {
-        return manageUsersService.find(principal.getName());
+    public User currentUser(Principal principal) throws NotFoundException {
+        return manageUsersService.findByUsername(principal.getName());
     }
 
     /**
