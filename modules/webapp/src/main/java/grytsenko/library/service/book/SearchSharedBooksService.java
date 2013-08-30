@@ -1,9 +1,11 @@
 package grytsenko.library.service.book;
 
+import static java.text.MessageFormat.format;
 import grytsenko.library.model.book.SearchResults;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
-import grytsenko.library.repository.SharedBooksRepository;
+import grytsenko.library.repository.NotFoundException;
+import grytsenko.library.repository.book.SharedBooksRepository;
 
 import java.util.List;
 
@@ -28,13 +30,19 @@ public class SearchSharedBooksService {
 
     /**
      * Finds a book.
+     * 
+     * @return the found book.
+     * 
+     * @throws NotFoundException
+     *             if book was not found.
      */
-    public SharedBook find(long bookId) {
+    public SharedBook find(long bookId) throws NotFoundException {
         SharedBook book = sharedBooksRepository.findOne(bookId);
 
         if (book == null) {
             LOGGER.warn("Book {} was not found.", bookId);
-            throw new BookNotFoundException();
+            throw new NotFoundException(format("Book {0} was not found.",
+                    bookId));
         }
 
         return book;

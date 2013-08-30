@@ -1,14 +1,15 @@
 package grytsenko.library.service.book;
 
-import static grytsenko.library.service.book.ManageBooksHelper.delete;
-import static grytsenko.library.service.book.ManageBooksHelper.save;
+import static grytsenko.library.repository.RepositoryUtils.delete;
+import static grytsenko.library.repository.RepositoryUtils.save;
 import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.book.BookDetails;
 import grytsenko.library.model.book.OfferedBook;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
-import grytsenko.library.repository.OfferedBooksRepository;
-import grytsenko.library.repository.SharedBooksRepository;
+import grytsenko.library.repository.NotUpdatedException;
+import grytsenko.library.repository.book.OfferedBooksRepository;
+import grytsenko.library.repository.book.SharedBooksRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +36,11 @@ public class ManageOfferedBooksService {
      */
     @Transactional
     public OfferedBook vote(OfferedBook book, User user)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         LOGGER.debug("Add vote from {} for book {}.", user.getUsername(),
                 book.getId());
         if (book.hasVoter(user)) {
-            throw new BookNotUpdatedException("User can vote once.");
+            throw new NotUpdatedException("User can vote once.");
         }
 
         book.addVoter(user);
@@ -51,10 +52,10 @@ public class ManageOfferedBooksService {
      */
     @Transactional
     public SharedBook share(OfferedBook book, User manager)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         LOGGER.debug("Share book {}.", book.getId());
         if (!manager.isManager()) {
-            throw new BookNotUpdatedException("User has no permissions.");
+            throw new NotUpdatedException("User has no permissions.");
         }
 
         LOGGER.debug("Delete offered book {}.", book.getId());
@@ -75,10 +76,10 @@ public class ManageOfferedBooksService {
      * Removes book from list of shared books.
      */
     public void remove(OfferedBook book, User manager)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         LOGGER.debug("Remove book {}.", book.getId());
         if (!manager.isManager()) {
-            throw new BookNotUpdatedException("User has no permissions.");
+            throw new NotUpdatedException("User has no permissions.");
         }
 
         delete(book, offeredBooksRepository);

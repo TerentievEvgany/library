@@ -10,8 +10,8 @@ import static grytsenko.library.view.Navigation.redirectToVote;
 import grytsenko.library.model.book.OfferedBook;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
-import grytsenko.library.service.book.BookNotFoundException;
-import grytsenko.library.service.book.BookNotUpdatedException;
+import grytsenko.library.repository.NotFoundException;
+import grytsenko.library.repository.NotUpdatedException;
 import grytsenko.library.service.book.ManageOfferedBooksService;
 import grytsenko.library.service.book.SearchOfferedBooksService;
 import grytsenko.library.service.user.ManageUsersService;
@@ -63,10 +63,12 @@ public class OfferedBookController {
 
     /**
      * User views details about book.
+     * 
+     * @throws NotFoundException
      */
     @RequestMapping(method = RequestMethod.GET)
     public String getVotedBook(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            Model model) {
+            Model model) throws NotFoundException {
         LOGGER.debug("Find book {}.", bookId);
 
         OfferedBook book = searchOfferedBooksService.find(bookId);
@@ -82,7 +84,7 @@ public class OfferedBookController {
     @RequestMapping(params = "vote", method = RequestMethod.POST)
     public String vote(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("{} votes for book {}.", user.getUsername(), bookId);
 
         OfferedBook book = searchOfferedBooksService.find(bookId);
@@ -97,7 +99,7 @@ public class OfferedBookController {
     @RequestMapping(params = "share", method = RequestMethod.POST)
     public String share(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("{} shares book {}.", user.getUsername(), bookId);
 
         OfferedBook book = searchOfferedBooksService.find(bookId);
@@ -114,7 +116,7 @@ public class OfferedBookController {
     @RequestMapping(params = "remove", method = RequestMethod.POST)
     public String remove(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("{} removes book {}.", user.getUsername(), bookId);
 
         OfferedBook book = searchOfferedBooksService.find(bookId);
@@ -126,8 +128,8 @@ public class OfferedBookController {
     /**
      * If book was not updated, then notification should be shown.
      */
-    @ExceptionHandler(BookNotUpdatedException.class)
-    public String whenBookNotUpdated(BookNotUpdatedException exception,
+    @ExceptionHandler(NotUpdatedException.class)
+    public String whenBookNotUpdated(NotUpdatedException exception,
             HttpServletRequest request) {
         Long bookId = getBookIdFromRequest(request);
         LOGGER.warn("Book {} was not updated, because: '{}'.", bookId,
@@ -142,7 +144,7 @@ public class OfferedBookController {
     /**
      * If book was not found, then we redirect user to list of books.
      */
-    @ExceptionHandler(BookNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     public String whenBookNotFound(HttpServletRequest request) {
         Long bookId = getBookIdFromRequest(request);
         LOGGER.warn("Book {} was not found.", bookId);

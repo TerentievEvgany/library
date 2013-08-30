@@ -1,10 +1,11 @@
 package grytsenko.library.service.book;
 
-import static grytsenko.library.service.book.ManageBooksHelper.save;
+import static grytsenko.library.repository.RepositoryUtils.save;
 import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
-import grytsenko.library.repository.SharedBooksRepository;
+import grytsenko.library.repository.NotUpdatedException;
+import grytsenko.library.repository.book.SharedBooksRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +30,9 @@ public class ManageSharedBooksService {
      */
     @Transactional
     public SharedBook reserve(SharedBook book, User user)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         if (!book.canBeReserved()) {
-            throw new BookNotUpdatedException("Book can not be reserved.");
+            throw new NotUpdatedException("Book can not be reserved.");
         }
 
         LOGGER.debug("Reserve book {}.", book.getId());
@@ -48,9 +49,9 @@ public class ManageSharedBooksService {
      */
     @Transactional
     public SharedBook release(SharedBook book, User user)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         if (!book.canBeReleasedBy(user)) {
-            throw new BookNotUpdatedException("Book can not be released.");
+            throw new NotUpdatedException("Book can not be released.");
         }
         LOGGER.debug("Release book {}.", book.getId());
 
@@ -63,12 +64,12 @@ public class ManageSharedBooksService {
      */
     @Transactional
     public SharedBook takeOut(SharedBook book, User user)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         if (!user.isManager()) {
-            throw new BookNotUpdatedException("User has no permissions.");
+            throw new NotUpdatedException("User has no permissions.");
         }
         if (!book.canBeTakenOutBy(user)) {
-            throw new BookNotUpdatedException("Book can not be taken out.");
+            throw new NotUpdatedException("Book can not be taken out.");
         }
         LOGGER.debug("Take out book {}.", book.getId());
 
@@ -81,12 +82,12 @@ public class ManageSharedBooksService {
      */
     @Transactional
     public SharedBook takeBack(SharedBook book, User user)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         if (!user.isManager()) {
-            throw new BookNotUpdatedException("User has no permissions.");
+            throw new NotUpdatedException("User has no permissions.");
         }
         if (!book.canBeTakenBackBy(user)) {
-            throw new BookNotUpdatedException("Book can not be taken back.");
+            throw new NotUpdatedException("Book can not be taken back.");
         }
         LOGGER.debug("Take back book {}.", book.getId());
 
@@ -99,7 +100,7 @@ public class ManageSharedBooksService {
      */
     @Transactional
     public SharedBook subscribe(SharedBook book, User user)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         LOGGER.debug("Add subscriber {} to the book {}.", user.getUsername(),
                 book.getId());
 
@@ -112,7 +113,7 @@ public class ManageSharedBooksService {
      */
     @Transactional
     public SharedBook unsubscribe(SharedBook book, User user)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         LOGGER.debug("Remove subscriber {} of the book {}.",
                 user.getUsername(), book.getId());
 

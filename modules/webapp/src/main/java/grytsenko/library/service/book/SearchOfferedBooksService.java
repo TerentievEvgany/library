@@ -1,11 +1,11 @@
 package grytsenko.library.service.book;
 
+import static java.text.MessageFormat.format;
 import grytsenko.library.model.book.OfferedBook;
 import grytsenko.library.model.book.SearchResults;
-import grytsenko.library.repository.OfferedBooksRepository;
+import grytsenko.library.repository.NotFoundException;
+import grytsenko.library.repository.book.OfferedBooksRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,21 +17,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchOfferedBooksService {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(SearchOfferedBooksService.class);
-
     @Autowired
     protected OfferedBooksRepository offeredBooksRepository;
 
     /**
      * Finds a book.
+     * 
+     * @return the found book.
+     * 
+     * @throws NotFoundException
+     *             if book was not found.
      */
-    public OfferedBook find(long bookId) {
+    public OfferedBook find(long bookId) throws NotFoundException {
         OfferedBook book = offeredBooksRepository.findOne(bookId);
 
         if (book == null) {
-            LOGGER.warn("Book {} was not found.", bookId);
-            throw new BookNotFoundException();
+            throw new NotFoundException(format("Book {0} was not found.",
+                    bookId));
         }
 
         return book;
