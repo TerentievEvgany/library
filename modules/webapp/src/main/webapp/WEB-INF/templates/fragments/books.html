@@ -4,7 +4,7 @@
 
     <div th:fragment="bookThumbnail">
         <div class="thumbnail" th:object="${details}">
-            <div class="text-center">
+            <div class="text-center" th:if="*{thumbnailUrl}">
                 <a th:href="${detailsUrl}">
                     <img onerror="$(this).hide();" th:src="*{thumbnailUrl}" />
                 </a>
@@ -24,11 +24,9 @@
 
     <div th:fragment="bookDetails">
         <div class="media" th:object="${details}">
-            <div class="pull-left">
-                <a class="fancybox" th:href="*{imageUrl}">
-                    <img class="media-object" onerror="$(this).hide();"
-                        th:src="*{thumbnailUrl}" />
-                </a>
+            <div class="pull-left" th:if="*{thumbnailUrl}">
+                <img class="media-object" onerror="$(this).hide();"
+                    th:src="*{thumbnailUrl}" />
             </div>
             <div class="media-body">
                 <h3 th:text="*{title}"></h3>
