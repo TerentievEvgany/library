@@ -8,20 +8,23 @@
     <div th:include="fragments/common :: navbar"></div>
 
     <div class="container">
-        <div class="panel panel-info" th:if="${!usedBooks.isEmpty()}">
-            <div class="panel-heading">
-                <h3 class="panel-title" th:text="#{book.message.used}"></h3>
-            </div>
-            <div class="panel-body" th:include="fragments/books :: booksList"
+        <address th:object="${currentUser}">
+            <strong th:text="*{readableName}"></strong><br />
+            <a th:href="'mailto:' + *{mail}" th:text="*{mail}"></a>
+        </address>
+
+        <hr />
+
+        <div th:unless="${usedBooks.isEmpty()}">
+            <h4 th:text="#{book.message.used}"></h4>
+            <div th:include="fragments/books :: booksList"
                 th:with="books=${usedBooks}"></div>
         </div>
 
-        <div class="panel panel-info" th:if="${!expectedBooks.isEmpty()}">
-            <div class="panel-heading">
-                <h3 class="panel-title" th:text="#{book.message.expected}"></h3>
-            </div>
-            <div class="panel-body" th:include="fragments/books :: booksList"
-                th:with="books=${expectedBooks}"></div>
+        <div th:unless="${expectedBooks.isEmpty()}">
+            <h4 th:text="#{book.message.expected}"></h4>
+            <div th:include="fragments/books :: booksList"
+                th:with="books=${expectedBooks}, showAvailable=#{true}"></div>
         </div>
 
     </div>

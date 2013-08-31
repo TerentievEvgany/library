@@ -60,39 +60,18 @@
         </div>
     </div>
 
-    <div th:fragment="bookStatus">
-        <span th:if="${book.available}" th:text="#{book.status.available}"
-            class="label label-success"></span>
-        <span th:if="${book.reserved}" th:text="#{book.status.reserved}"
-            class="label label-info"></span>
-        <span th:if="${book.borrowed}" th:text="#{book.status.borrowed}"
-            class="label label-info"></span>
-    </div>
-
     <div th:fragment="booksList">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th class="book-title" th:text="#{user.book.title}"></th>
-                    <th th:text="#{user.book.status}"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="book : ${books}" th:with="details=${book.details}">
-                    <td>
-                        <a th:href="@{/shared-book(bookId=${book.id})}"
-                            th:text="${book.details.title}"></a>
-                    </td>
-                    <td>
-                        <div th:include="fragments/books :: bookStatus"
-                            th:with="details=${book.details}"></div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <ul class="list-group">
+            <li class="list-group-item" th:each="book : ${books}"
+                th:with="details=${book.details}">
+                <span class="pull-right label label-success"
+                    th:text="#{book.status.available}"
+                    th:if="${#bools.isTrue(showAvailable) and book.available}"></span>
+                <a th:href="@{/shared-book(bookId=${book.id})}"
+                    th:text="${book.details.title}"></a>
+            </li>
+        </ul>
     </div>
-
-
 
 </body>
 

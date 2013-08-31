@@ -28,41 +28,36 @@
             <div class="pull-right">
                 <p>
                     <button name="takeOut" type="submit" class="btn btn-primary"
-                        th:if="${book.canBeTakenOutBy(currentUser)}">
-                        <span th:text="#{book.action.takeout}"></span>
-                    </button>
+                        th:text="#{book.action.takeout}"
+                        th:if="${book.canBeTakenOutBy(currentUser)}"></button>
                     <button name="takeBack" type="submit"
                         class="btn btn-primary"
+                        th:text="#{book.action.takeback}"
                         th:if="${book.canBeTakenBackBy(currentUser)}">
-                        <span th:text="#{book.action.takeback}"></span>
                     </button>
 
                     <button name="remind" type="submit" class="btn btn-default"
+                        th:text="#{book.action.remind}"
                         th:if="${book.isManagedBy(currentUser) and (book.reserved or book.borrowed)}">
-                        <span th:text="#{book.action.remind}"></span>
                     </button>
                 </p>
             </div>
             <p>
                 <button name="reserve" type="submit" class="btn btn-primary"
+                    th:text="#{book.action.reserve}"
                     th:if="${book.canBeReserved()}">
-                    <span th:text="#{book.action.reserve}"></span>
+                    <span></span>
                 </button>
                 <button name="release" type="submit" class="btn btn-warning"
-                    th:if="${book.canBeReleasedBy(currentUser)}">
-                    <span th:text="#{book.action.release}"></span>
-                </button>
+                    th:text="#{book.action.release}"
+                    th:if="${book.canBeReleasedBy(currentUser)}"></button>
 
                 <button name="subscribe" type="submit" class="btn btn-default"
-                    th:if="${!book.hasSubscriber(currentUser)}">
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                    <span th:text="#{book.action.subscribe}"></span>
-                </button>
+                    th:text="#{book.action.subscribe}"
+                    th:if="${!book.hasSubscriber(currentUser)}"></button>
                 <button name="unsubscribe" type="submit" class="btn btn-default"
-                    th:if="${book.hasSubscriber(currentUser)}">
-                    <span class="glyphicon glyphicon-eye-close"></span>
-                    <span th:text="#{book.action.unsubscribe}"></span>
-                </button>
+                    th:text="#{book.action.unsubscribe}"
+                    th:if="${book.hasSubscriber(currentUser)}"></button>
             </p>
         </form>
     </div>
