@@ -24,9 +24,21 @@
             </div>
         </div>
 
+        <div class="row" th:if="${book.subscribersNum > 0}">
+            <div class="col-md-12">
+                <ul class="list-inline">
+                    <li th:each="subscriber : ${book.subscribers}">
+                        <span
+                            th:class="'label ' + ${subscriber.equals(currentUser) ? 'label-info' : 'label-default'}"
+                            th:text="${subscriber.readableName}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
         <div class="row">
-            <div class="col-md-3">
-                <form method="POST">
+            <div class="col-md-12">
+                <form method="POST" class="pull-right">
                     <p>
                         <button name="subscribe" type="submit"
                             class="btn btn-default"
