@@ -8,12 +8,16 @@
     <div th:include="fragments/common :: navbar"></div>
 
     <div class="container">
-        <div th:include="fragments/common :: paginator"
-            th:with="pageNum=${searchResults.pageNum}, pagesTotal=${searchResults.pagesTotal}, pageUrl='/search'"></div>
+        <div class="row">
+            <div class="col-md-12" th:include="fragments/common :: paginator"
+                th:with="pageNum=${searchResults.pageNum}, pagesTotal=${searchResults.pagesTotal}, pageUrl='/search'">
+            </div>
+        </div>
 
-        <div th:with="books=${searchResults.content}">
-            <p class="text-info" th:text="#{warning.books.not.found}"
-                th:if="${books.isEmpty()}"></p>
+        <div class="row" th:with="books=${searchResults.content}">
+            <div class="col-md-12" th:if="${books.isEmpty()}">
+                <p class="text-info" th:text="#{warning.books.not.found}"></p>
+            </div>
 
             <div class="col-md-3" th:each="book : ${books}"
                 th:include="fragments/books :: bookThumbnail"

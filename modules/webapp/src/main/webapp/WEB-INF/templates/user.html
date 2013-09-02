@@ -8,23 +8,31 @@
     <div th:include="fragments/common :: navbar"></div>
 
     <div class="container">
-        <address th:object="${currentUser}">
-            <strong th:text="*{readableName}"></strong><br />
-            <a th:href="'mailto:' + *{mail}" th:text="*{mail}"></a>
-        </address>
+        <div class="row">
+            <div class="col-md-12">
+                <address th:object="${currentUser}">
+                    <strong th:text="*{readableName}"></strong><br />
+                    <a th:href="'mailto:' + *{mail}" th:text="*{mail}"></a>
+                </address>
+            </div>
+        </div>
 
         <hr />
 
-        <div th:unless="${usedBooks.isEmpty()}">
-            <h4 th:text="#{book.message.used}"></h4>
-            <div th:include="fragments/books :: booksList"
-                th:with="books=${usedBooks}"></div>
+        <div class="row" th:unless="${usedBooks.isEmpty()}">
+            <div class="col-md-12">
+                <h4 th:text="#{user.books.used}"></h4>
+                <div th:include="fragments/books :: booksList"
+                    th:with="books=${usedBooks}"></div>
+            </div>
         </div>
 
-        <div th:unless="${expectedBooks.isEmpty()}">
-            <h4 th:text="#{book.message.expected}"></h4>
-            <div th:include="fragments/books :: booksList"
-                th:with="books=${expectedBooks}, showAvailable=#{true}"></div>
+        <div class="row" th:unless="${expectedBooks.isEmpty()}">
+            <div class="col-md-12">
+                <h4 th:text="#{user.books.expected}"></h4>
+                <div th:include="fragments/books :: booksList"
+                    th:with="books=${expectedBooks}, showAvailable=#{true}"></div>
+            </div>
         </div>
 
     </div>

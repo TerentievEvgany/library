@@ -8,9 +8,13 @@
     <div th:include="fragments/common :: navbar"></div>
 
     <div class="container">
-        <p class="text-error">
-            <strong th:text="#{error.internal}"></strong>
-        </p>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="text-error">
+                    <strong th:text="#{error.internal}"></strong>
+                </p>
+            </div>
+        </div>
     </div>
 
     <div th:include="fragments/common :: scripts"></div>
