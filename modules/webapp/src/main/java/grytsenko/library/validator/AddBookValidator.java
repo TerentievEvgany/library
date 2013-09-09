@@ -8,10 +8,21 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
- * Created by Evgeny on 20.08.13.
+ * Validador called when a new book add
  */
 @Component
 public class AddBookValidator implements Validator {
+
+    public static final String AUTHORS_INPUT_NAME = "authors";
+    public static final String TITLE_INPUT_NAME = "title";
+    public static final String PUBLISHER_INPUT_NAME = "publisher";
+    public static final String ISBN_INPUT_NAME = "isbn";
+    public static final String LANGUAGE_INPUT_NAME = "language";
+    public static final String IMAGE_URL_INPUT_NAME = "imageUrl";
+    public static final String THUMBNAIL_URL_INPUT_NAME = "thumbnailUrl";
+    public static final String PAGES_INPUT_NAME = "pages";
+    public static final String YEAR_INPUT_NAME = "year";
+
     @Override
     public boolean supports(Class<?> clazz) {
         return BookDetails.class.isAssignableFrom(clazz);
@@ -20,73 +31,56 @@ public class AddBookValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         BookDetails bookDetails = (BookDetails) target;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "authors", "add.book.field.empty");
-        String authors = bookDetails.getAuthors();
-        if ((authors.length()) > BookDetails.AUTHORS_LENGTH_MAX) {
-            errors.rejectValue("authors", "add.book.tooLong");
-        }
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "add.book.field.empty");
-        String title = bookDetails.getTitle();
-        if ((title.length()) > BookDetails.TITLE_LENGTH_MAX) {
-            errors.rejectValue("title", "add.book.tooLong");
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, AUTHORS_INPUT_NAME, "book.error.field.empty");
+        checkStringField(AUTHORS_INPUT_NAME, errors, bookDetails.getAuthors(), BookDetails.AUTHORS_LENGTH_MAX);
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "publisher", "add.book.field.empty");
-        String publisher = bookDetails.getPublisher();
-        if ((publisher.length()) > BookDetails.PUBLISHER_LENGTH_MAX) {
-            errors.rejectValue("publisher", "add.book.tooLong");
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, TITLE_INPUT_NAME, "book.error.field.empty");
+        checkStringField(TITLE_INPUT_NAME, errors, bookDetails.getTitle(), BookDetails.TITLE_LENGTH_MAX);
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "isbn", "add.book.field.empty");
-        String isbn = bookDetails.getIsbn();
-        if ((isbn.length()) > BookDetails.ISBN_LENGTH_MAX) {
-            errors.rejectValue("isbn", "add.book.tooLong");
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, PUBLISHER_INPUT_NAME, "book.error.field.empty");
+        checkStringField(PAGES_INPUT_NAME, errors, bookDetails.getPublisher(), BookDetails.PUBLISHER_LENGTH_MAX);
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "language", "add.book.field.empty");
-        String language = bookDetails.getLanguage();
-        if ((language.length()) > BookDetails.LANGUAGE_LENGTH_MAX) {
-            errors.rejectValue("language", "add.book.tooLong");
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, ISBN_INPUT_NAME, "book.error.field.empty");
+        checkStringField(ISBN_INPUT_NAME, errors, bookDetails.getIsbn(), BookDetails.ISBN_LENGTH_MAX);
 
-        String imageUrl = bookDetails.getImageUrl();
-        if ((imageUrl.length()) > BookDetails.URL_LENGTH_MAX) {
-            errors.rejectValue("imageUrl", "add.book.tooLong");
-        }
-        if (!imageUrl.isEmpty()){
-            UrlValidator urlValidator = new UrlValidator();
-            if (!(urlValidator.isValid(imageUrl))){
-                errors.rejectValue("imageUrl","add.book.invalidURL");
-            }
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, LANGUAGE_INPUT_NAME, "book.error.field.empty");
+        checkStringField(LANGUAGE_INPUT_NAME, errors, bookDetails.getLanguage(), BookDetails.LANGUAGE_LENGTH_MAX);
 
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, YEAR_INPUT_NAME, "book.error.field.empty");
+        checkIntField(YEAR_INPUT_NAME, bookDetails.getYear(), errors, BookDetails.YEAR_LENGTH_MAX);
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "year", "add.book.field.empty");
-        Integer year = bookDetails.getYear();
-        if (year != null) {
-            if ((year.toString().length()) > BookDetails.YEAR_LENGTH_MAX){
-                errors.rejectValue("year", "add.book.tooLong");
-            }
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, PAGES_INPUT_NAME, "book.error.field.empty");
+        checkIntField(PAGES_INPUT_NAME, bookDetails.getPages(), errors, BookDetails.PAGES_LENGTH_MAX);
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pages", "add.book.field.empty");
-        Integer pages = bookDetails.getPages();
-        if (pages != null) {
-            if ((pages.toString().length()) > BookDetails.PAGES_LENGTH_MAX){
-                errors.rejectValue("pages", "add.book.tooLong");
-            }
-        }
+        checkStringField(IMAGE_URL_INPUT_NAME, errors, bookDetails.getImageUrl(), BookDetails.URL_LENGTH_MAX);
+        validateUrl(IMAGE_URL_INPUT_NAME, errors, bookDetails.getImageUrl());
 
-        String thumbnailUrl = bookDetails.getThumbnailUrl();
-        if ((thumbnailUrl.length()) > BookDetails.URL_LENGTH_MAX) {
-            errors.rejectValue("thumbnailUrl", "add.book.tooLong");
+        checkStringField(THUMBNAIL_URL_INPUT_NAME, errors, bookDetails.getThumbnailUrl(), BookDetails.URL_LENGTH_MAX);
+        validateUrl(THUMBNAIL_URL_INPUT_NAME, errors, bookDetails.getThumbnailUrl());
+    }
+
+    private void checkStringField(String fieldName, Errors errors, String field, int lengthMax) {
+        if (field.length() > lengthMax) {
+            errors.rejectValue(fieldName, "book.error.field.lengthmax");
         }
-        if (!thumbnailUrl.isEmpty()){
-            UrlValidator thumbnailUrlValidator = new UrlValidator();
-            if (!(thumbnailUrlValidator.isValid(thumbnailUrl))){
-                errors.rejectValue("thumbnailUrl","add.book.invalidURL");
+    }
+
+    private void checkIntField(String fieldName, Integer fieldValue, Errors errors, int lengthMAx) {
+        if (fieldValue != null) {
+            if (fieldValue.toString().length() > lengthMAx) {
+                errors.rejectValue(fieldName, "book.error.field.lengthmax");
             }
         }
     }
+
+    private void validateUrl(String fieldName, Errors errors, String field) {
+        if (!field.isEmpty()) {
+            UrlValidator urlValidator = new UrlValidator();
+            if (!(urlValidator.isValid(field))) {
+                errors.rejectValue(fieldName, "book.error.invalidURL");
+            }
+        }
+    }
+
 }

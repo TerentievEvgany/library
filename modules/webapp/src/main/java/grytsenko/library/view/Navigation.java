@@ -15,6 +15,7 @@ public final class Navigation {
     public static final String USER_PATH = "/user";
     public static final String SHARED_BOOK_PATH = "/shared-book";
     public static final String OFFERED_BOOK_PATH = "/offered-book";
+    public static final String ADD_BOOK_PATH = "/addBook";
 
     public static final String BOOK_ID_PARAM = "bookId";
     public static final String PAGE_NUM_PARAM = "pageNum";

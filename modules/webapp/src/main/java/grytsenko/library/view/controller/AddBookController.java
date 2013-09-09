@@ -17,14 +17,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
 
+import static grytsenko.library.view.Navigation.ADD_BOOK_PATH;
 import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
 import static grytsenko.library.view.Navigation.redirectToOfferedBook;
 
 /**
- * Created by Evgeny on 20.08.13.
+ * Processes requests for adding a new book.
  */
 @Controller
-@RequestMapping("/addBook")
+@RequestMapping(ADD_BOOK_PATH)
 public class AddBookController {
 
     @Autowired
@@ -42,22 +43,22 @@ public class AddBookController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String add(Model model){
+    public String add(Model model) {
         BookDetails bookDetails = new BookDetails();
-        model.addAttribute("bookDetails",bookDetails);
+        model.addAttribute("bookDetails", bookDetails);
         return "addBook";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String addBook(BookDetails bookDetails,BindingResult result, @ModelAttribute(CURRENT_USER_ATTR) User user)
-        throws BookNotUpdatedException {
-    addBookValidator.validate(bookDetails,result);
-    if (result.hasErrors()){
-        return "addBook";
-    }
-    OfferedBook offeredBook = new OfferedBook();
-    offeredBook.setDetails(bookDetails);
-    manageOfferedBooksService.add(offeredBook,user);
-    return redirectToOfferedBook(offeredBook.getId());
+    public String addBook(BookDetails bookDetails, BindingResult result, @ModelAttribute(CURRENT_USER_ATTR) User user)
+            throws BookNotUpdatedException {
+        addBookValidator.validate(bookDetails, result);
+        if (result.hasErrors()) {
+            return "addBook";
+        }
+        OfferedBook offeredBook = new OfferedBook();
+        offeredBook.setDetails(bookDetails);
+        manageOfferedBooksService.add(offeredBook, user);
+        return redirectToOfferedBook(offeredBook.getId());
     }
 }

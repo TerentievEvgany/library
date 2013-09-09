@@ -9,8 +9,8 @@
 
 <div class="container">
 
-    <form name="addBookForm" th:object="${bookDetails}" method="POST" class="form-signin">
-        <h2 class="form-signin-heading" th:text="#{add.book.title}">Add book</h2>
+    <form name="addBookForm" th:object="${bookDetails}" method="POST" class="form-adding">
+        <h2 class="form-adding-heading" th:text="#{add.book.title}">Add book</h2>
 
         <input name="authors" type="text" class="input-block-level"
              th:placeholder="#{add.book.authors}" th:field="*{authors}"/>
