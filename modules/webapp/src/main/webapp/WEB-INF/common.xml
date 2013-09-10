@@ -12,7 +12,7 @@
         class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
         p:basenames="i18n/messages" />
 
-    <bean class="grytsenko.library.context.UpdateUser" />
+    <bean class="grytsenko.library.context.LoginListener" />
 
     <task:annotation-driven />
 

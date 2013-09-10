@@ -7,13 +7,14 @@
 <meta charset="utf-8" />
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <title th:text="#{app.title}">Library</title>
 
 <link rel="shortcut icon" th:href="@{/favicon.ico}" />
 
-<link rel="stylesheet" th:href="@{/resources/bootstrap/css/bootstrap.css}" />
-<link rel="stylesheet" th:href="@{/resources/fancybox/css/jquery.fancybox.css}" />
+<link rel="stylesheet"
+    href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
 <link rel="stylesheet" th:href="@{/resources/library/css/library.css}" />
 
 </head>
@@ -21,22 +22,33 @@
 <body>
 
     <div th:fragment="navbar">
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <div class="brand" th:text="#{app.title}"></div>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
+        <div class="navbar navbar-fixed-top navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <span class="navbar-brand" th:text="#{app.title}"></span>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a th:href="@{/search}">
+                                <span class="glyphicon glyphicon-search"></span>
+                                <span th:text="#{app.page.search}"></span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="pull-right">
+                        <ul class="nav navbar-nav">
                             <li>
-                                <a href="#" th:href="@{/search}">
-                                    <i class="icon-search"></i>
-                                    <span th:text="#{app.page.search}"></span>
+                                <a th:href="@{/user}">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <strong th:text="${currentUser.username}"></strong>
                                 </a>
                             </li>
+                            <li class="divider-vertical"></li>
                             <li>
-                                <a href="#" th:href="@{/vote}">
-                                    <i class="icon-thumbs-up"></i>
-                                    <span th:text="#{app.page.vote}"></span>
+                                <a th:href="@{/j_spring_security_logout}">
+                                    <span class="glyphicon glyphicon-off"></span>
                                 </a>
                             </li>
                             <li>
@@ -46,34 +58,15 @@
                                 </a>
                             </li>
                         </ul>
-
-                        <div class="pull-right">
-                            <ul class="nav">
-                                <li>
-                                    <a href="#" th:href="@{/user}">
-                                        <i class="icon-user"></i>
-                                        <strong
-                                            th:text="${currentUser.username}"></strong>
-                                    </a>
-                                </li>
-                                <li class="divider-vertical"></li>
-                                <li>
-                                    <a href="#"
-                                        th:href="@{/j_spring_security_logout}">
-                                        <i class="icon-off"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div th:fragment="paginator" th:if="${total > 1}">
-        <div class="pagination pagination-centered">
-            <ul>
+    <div th:fragment="paginator">
+        <div class="text-center" th:if="${pagesTotal > 1}">
+            <ul class="pagination">
                 <li th:class="${pageNum == 0} ? 'disabled'">
                     <a
                         th:href="@{${pageUrl}(pageNum=${pageNum &gt; 0 ? pageNum - 1 : 0})}">«</a>
@@ -92,10 +85,9 @@
     </div>
 
     <div th:fragment="scripts">
-        <script th:src="@{/resources/jquery/jquery.js}"></script>
-        <script th:src="@{/resources/bootstrap/js/bootstrap.js}"></script>
-        <script th:src="@{/resources/fancybox/js/jquery.fancybox.js}"></script>
-        <script th:src="@{/resources/library/js/library.js}"></script>
+        <script src="//code.jquery.com/jquery-latest.min.js"></script>
+        <script
+            src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     </div>
 
 </body>

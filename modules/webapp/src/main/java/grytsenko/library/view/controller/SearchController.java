@@ -7,6 +7,7 @@ import static grytsenko.library.view.ViewConstants.THUMBNAILS_PER_PAGE;
 import grytsenko.library.model.book.SearchResults;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
+import grytsenko.library.repository.NotFoundException;
 import grytsenko.library.service.book.SearchSharedBooksService;
 import grytsenko.library.service.user.ManageUsersService;
 
@@ -43,8 +44,8 @@ public class SearchController {
     protected SearchSharedBooksService searchSharedBooksService;
 
     @ModelAttribute(CURRENT_USER_ATTR)
-    public User currentUser(Principal principal) {
-        return manageUsersService.find(principal.getName());
+    public User currentUser(Principal principal) throws NotFoundException {
+        return manageUsersService.findByUsername(principal.getName());
     }
 
     /**

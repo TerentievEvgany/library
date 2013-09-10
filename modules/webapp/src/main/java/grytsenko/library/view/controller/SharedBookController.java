@@ -8,8 +8,8 @@ import static grytsenko.library.view.Navigation.redirectToSearch;
 import static grytsenko.library.view.Navigation.redirectToSharedBook;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
-import grytsenko.library.service.book.BookNotFoundException;
-import grytsenko.library.service.book.BookNotUpdatedException;
+import grytsenko.library.repository.NotFoundException;
+import grytsenko.library.repository.NotUpdatedException;
 import grytsenko.library.service.book.ManageSharedBooksService;
 import grytsenko.library.service.book.SearchSharedBooksService;
 import grytsenko.library.service.user.ManageUsersService;
@@ -55,15 +55,18 @@ public class SharedBookController {
     protected ManageSharedBooksService manageSharedBooksService;
 
     @ModelAttribute(CURRENT_USER_ATTR)
-    public User currentUser(Principal principal) {
-        return manageUsersService.find(principal.getName());
+    public User currentUser(Principal principal) throws NotFoundException {
+        return manageUsersService.findByUsername(principal.getName());
     }
 
     /**
      * User views details about book.
+     * 
+     * @throws NotFoundException
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String getBook(@RequestParam(BOOK_ID_PARAM) Long bookId, Model model) {
+    public String getBook(@RequestParam(BOOK_ID_PARAM) Long bookId, Model model)
+            throws NotFoundException {
         LOGGER.debug("Find book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -77,7 +80,7 @@ public class SharedBookController {
     @RequestMapping(params = "reserve", method = RequestMethod.POST)
     public String reserve(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("Reserve book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -93,7 +96,7 @@ public class SharedBookController {
     @RequestMapping(params = "release", method = RequestMethod.POST)
     public String release(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("Release book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -111,7 +114,7 @@ public class SharedBookController {
     @RequestMapping(params = "takeOut", method = RequestMethod.POST)
     public String takeOut(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("Take out book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -127,7 +130,7 @@ public class SharedBookController {
     @RequestMapping(params = "takeBack", method = RequestMethod.POST)
     public String takeBack(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("Take back book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -141,10 +144,13 @@ public class SharedBookController {
 
     /**
      * Manager reminds that book is reserved or is borrowed by user.
+     * 
+     * @throws NotFoundException
      */
     @RequestMapping(params = "remind", method = RequestMethod.POST)
     public String remind(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(CURRENT_USER_ATTR) User user) {
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
+            throws NotFoundException {
         LOGGER.debug("Remind about book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -169,7 +175,7 @@ public class SharedBookController {
     @RequestMapping(params = "subscribe", method = RequestMethod.POST)
     public String subscribe(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("Subscribe {} to emails about book {}.",
                 user.getUsername(), bookId);
 
@@ -185,7 +191,7 @@ public class SharedBookController {
     @RequestMapping(params = "unsubscribe", method = RequestMethod.POST)
     public String unsubscribe(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotFoundException, NotUpdatedException {
         LOGGER.debug("Unsubscribe {} from emails about book {}.",
                 user.getUsername(), bookId);
 
@@ -198,8 +204,8 @@ public class SharedBookController {
     /**
      * If book was not updated, then notification should be shown.
      */
-    @ExceptionHandler(BookNotUpdatedException.class)
-    public String whenBookNotUpdated(BookNotUpdatedException exception,
+    @ExceptionHandler(NotUpdatedException.class)
+    public String whenBookNotUpdated(NotUpdatedException exception,
             HttpServletRequest request) {
         Long bookId = getBookIdFromRequest(request);
         LOGGER.warn("Book {} was not updated, because: '{}'.", bookId,
@@ -214,7 +220,7 @@ public class SharedBookController {
     /**
      * If book was not found, then we redirect user to list of books.
      */
-    @ExceptionHandler(BookNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     public String whenBookNotFound(HttpServletRequest request) {
         Long bookId = getBookIdFromRequest(request);
         LOGGER.warn("Book {} was not found.", bookId);

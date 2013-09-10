@@ -1,6 +1,6 @@
 package grytsenko.library.context;
 
-import grytsenko.library.model.user.User;
+import grytsenko.library.repository.NotUpdatedException;
 import grytsenko.library.service.user.ManageUsersService;
 
 import org.slf4j.Logger;
@@ -11,33 +11,28 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.core.Authentication;
 
 /**
- * Updates information about user in application database.
+ * Performs login of authenticated user.
  */
-public class UpdateUser implements
+public class LoginListener implements
         ApplicationListener<AuthenticationSuccessEvent> {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(UpdateUser.class);
+            .getLogger(LoginListener.class);
 
     @Autowired
     protected ManageUsersService manageUsersService;
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
-        Authentication authentication = event.getAuthentication();
-        String username = authentication.getName();
+        Authentication auth = event.getAuthentication();
+        String username = auth.getName();
         LOGGER.debug("User {} is authenticated.", username);
 
-        User user = manageUsersService.find(username);
-        if (user == null) {
-            LOGGER.debug("User {} not found.", username);
-            LOGGER.debug("Create new user {}.", username);
-            user = User.create(username);
+        try {
+            manageUsersService.login(username);
+            LOGGER.debug("User {} is logged in.", username);
+        } catch (NotUpdatedException exception) {
+            LOGGER.debug("User {} is not logged in", username);
         }
-
-        manageUsersService.syncWithDs(user);
-        manageUsersService.update(user);
-        LOGGER.debug("User {} was updated.", username);
     }
-
 }

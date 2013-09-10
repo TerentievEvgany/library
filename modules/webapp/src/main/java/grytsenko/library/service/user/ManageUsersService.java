@@ -1,9 +1,13 @@
 package grytsenko.library.service.user;
 
+import static java.text.MessageFormat.format;
 import grytsenko.library.model.user.DsUser;
 import grytsenko.library.model.user.User;
-import grytsenko.library.repository.DsUsersRepository;
-import grytsenko.library.repository.UsersRepository;
+import grytsenko.library.repository.NotFoundException;
+import grytsenko.library.repository.NotUpdatedException;
+import grytsenko.library.repository.RepositoryUtils;
+import grytsenko.library.repository.user.DsUsersRepository;
+import grytsenko.library.repository.user.UsersRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,41 +29,48 @@ public class ManageUsersService {
     protected DsUsersRepository dsUsersRepository;
 
     /**
-     * Finds a user by its name.
+     * Finds a user by name.
      * 
-     * <p>
-     * If user is not found, then new user will be created.
+     * @param username
+     *            the name of user.
+     * 
+     * @throws NotFoundException
+     *             if user not found.
      */
-    public User find(String username) {
+    public User findByUsername(String username) throws NotFoundException {
         LOGGER.debug("Search user {}.", username);
-        return usersRepository.findByUsername(username);
-    }
 
-    /**
-     * Updates user.
-     */
-    public void update(User user) {
-        LOGGER.debug("Update user {}.", user.getUsername());
-        usersRepository.saveAndFlush(user);
-    }
-
-    /**
-     * Searches for a user in DS and then synchronizes it.
-     */
-    public void syncWithDs(User user) {
-        String username = user.getUsername();
-        LOGGER.debug("Sync user {} with DS.", username);
-
-        DsUser dsUser = dsUsersRepository.findByUsername(username);
-
-        if (dsUser == null) {
-            LOGGER.debug("User {} not found in DS.", username);
-            return;
+        User user = usersRepository.findByUsername(username);
+        if (user == null) {
+            throw new NotFoundException(format("User {0} not found.", username));
         }
 
-        user.syncWith(dsUser);
+        return user;
+    }
 
-        LOGGER.debug("User {} synced with DS.", username);
+    /**
+     * Performs login for authenticated user.
+     * 
+     * @param username
+     *            the name of user.
+     * 
+     * @throws NotUpdatedException
+     *             if login failed.
+     */
+    public void login(String username) throws NotUpdatedException {
+        User user = usersRepository.findByUsername(username);
+        if (user == null) {
+            LOGGER.debug("Create new user {}.", username);
+            user = User.create(username);
+        }
+
+        DsUser dsUser = dsUsersRepository.findByUsername(username);
+        if (dsUser != null) {
+            LOGGER.debug("Merge info from DS.");
+            user.syncWith(dsUser);
+        }
+
+        RepositoryUtils.save(user, usersRepository);
     }
 
 }

@@ -1,8 +1,8 @@
-package grytsenko.library.repository;
+package grytsenko.library.repository.user;
 
+import static java.text.MessageFormat.format;
 import grytsenko.library.model.user.DsUser;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -39,19 +39,16 @@ public class DsUsersRepository {
     protected String filterTemplate;
 
     @Value("#{ldapProperties['ldap.user.username']}")
-    protected String usernameAttr;
+    protected String usernameAttrId;
     @Value("#{ldapProperties['ldap.user.firstname']}")
-    protected String firstnameAttr;
+    protected String firstnameAttrId;
     @Value("#{ldapProperties['ldap.user.lastname']}")
-    protected String lastnameAttr;
+    protected String lastnameAttrId;
     @Value("#{ldapProperties['ldap.user.mail']}")
-    protected String mailAttr;
+    protected String mailAttrId;
 
     /**
      * Finds a user in directory service.
-     * 
-     * <p>
-     * If several users will be found, then the first user will be returned.
      * 
      * @param username
      *            the unique name of user.
@@ -59,54 +56,52 @@ public class DsUsersRepository {
      * @return the found user or <code>null</code> if user was not found.
      */
     public DsUser findByUsername(String username) {
-        LOGGER.debug("Search user {} in DS.", username);
+        LOGGER.debug("Search user {}.", username);
 
-        LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
-        String filter = MessageFormat.format(filterTemplate, username);
-        LOGGER.debug("Base DN is '{}' and filter is '{}'.", base, filter);
+        LdapTemplate template = new LdapTemplate(ldapContextSource);
+        String filter = format(filterTemplate, username);
 
-        List<?> foundUsers = ldapTemplate.search(base, filter,
-                new DsUserMapper());
+        List<?> foundUsers = template.search(base, filter, new UserMapper());
         if (foundUsers.isEmpty()) {
-            LOGGER.error("User {} not found in DS.", username);
+            LOGGER.error("User {} not found.", username);
             return null;
         }
-        if (foundUsers.size() > 0) {
-            LOGGER.warn("Several users were found in DS.", username);
+        if (foundUsers.size() > 1) {
+            LOGGER.warn("Several users were found.", username);
         }
 
         DsUser foundUser = (DsUser) foundUsers.get(0);
 
-        LOGGER.debug("User {} was found in DS.", foundUser.getUsername());
+        LOGGER.debug("User {} was found.", username);
         return foundUser;
     }
 
-    private class DsUserMapper implements AttributesMapper {
+    private class UserMapper implements AttributesMapper {
 
         @Override
-        public DsUser mapFromAttributes(Attributes attributes)
+        public DsUser mapFromAttributes(Attributes attrs)
                 throws NamingException {
             DsUser user = new DsUser();
 
-            Attribute username = attributes.get(usernameAttr);
-            user.setUsername((String) username.get());
+            String username = asString(usernameAttrId, attrs);
+            user.setUsername(username);
 
-            Attribute firstname = attributes.get(firstnameAttr);
-            if (firstname != null) {
-                user.setFirstname((String) firstname.get());
-            }
+            String firstname = asString(firstnameAttrId, attrs);
+            user.setFirstname(firstname);
 
-            Attribute lastname = attributes.get(lastnameAttr);
-            if (lastname != null) {
-                user.setLastname((String) lastname.get());
-            }
+            String lastname = asString(lastnameAttrId, attrs);
+            user.setLastname(lastname);
 
-            Attribute mail = attributes.get(mailAttr);
-            if (mail != null) {
-                user.setMail((String) mail.get());
-            }
+            String mail = asString(mailAttrId, attrs);
+            user.setMail(mail);
 
             return user;
+        }
+
+        private String asString(String attrId, Attributes attrs)
+                throws NamingException {
+            Attribute attr = attrs.get(attrId);
+            return attr != null ? (String) attr.get() : "";
         }
 
     }

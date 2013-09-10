@@ -6,21 +6,24 @@
 
 <body>
     <div class="container">
-        <div th:if="${lastLoginFailed}" class="alert alert-error">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <span th:text="#{error.login}">Name or password is incorrect.</span>
-        </div>
-
         <form name="loginForm" method="POST" class="form-signin"
             th:action="@{/j_spring_security_check}">
-            <h2 class="form-signin-heading" th:text="#{app.login.title}">Library</h2>
 
-            <input name="username" type="text" class="input-block-level"
-                placeholder="Name" th:placeholder="#{app.login.username}" />
-            <input name="password" type="password" class="input-block-level"
-                placeholder="Password" th:placeholder="#{app.login.password}" />
-            <button name="submit" type="submit" class="btn btn-primary"
-                th:text="#{app.login}">Sign In</button>
+            <div class="alert alert-warning alert-dismissable"
+                th:if="${lastLoginFailed}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <span th:text="#{error.login}"></span>
+            </div>
+
+            <h2 class="form-signin-heading" th:text="#{app.login.title}"></h2>
+
+            <input name="username" type="text" class="form-control"
+                th:placeholder="#{app.login.username}" />
+            <input name="password" type="password" class="form-control"
+                th:placeholder="#{app.login.password}" />
+            <button name="submit" type="submit"
+                class="btn btn-lg btn-primary btn-block"
+                th:text="#{app.login.action}"></button>
         </form>
     </div>
 

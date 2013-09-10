@@ -2,12 +2,9 @@ package grytsenko.library.test;
 
 import static grytsenko.library.test.Users.manager;
 import static grytsenko.library.util.DateUtils.now;
-import grytsenko.library.model.book.OfferedBook;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.book.SharedBookStatus;
 import grytsenko.library.model.user.User;
-
-import java.util.ArrayList;
 
 /**
  * Utilities for work with books in tests.
@@ -37,13 +34,6 @@ public final class Books {
         book.setStatus(SharedBookStatus.BORROWED);
         book.setUsedBy(borrowedBy);
         book.setUsedSince(now());
-        return book;
-    }
-
-    public static OfferedBook offeredBook() {
-        OfferedBook book = new OfferedBook();
-        book.setId(BOOK_ID);
-        book.setVoters(new ArrayList<User>());
         return book;
     }
 

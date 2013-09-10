@@ -8,6 +8,6 @@ public interface ViewConstants {
     /**
      * The number of thumbnails on one page.
      */
-    int THUMBNAILS_PER_PAGE = 3;
+    int THUMBNAILS_PER_PAGE = 4;
 
 }
