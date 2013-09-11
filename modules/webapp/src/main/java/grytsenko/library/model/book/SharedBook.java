@@ -23,6 +23,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import javax.persistence.CascadeType;
 
 /**
  * A copy of book that is shared.
@@ -54,7 +55,7 @@ public class SharedBook implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "details_id", nullable = false)
     private BookDetails details;
 
@@ -199,8 +200,8 @@ public class SharedBook implements Serializable {
 
     /**
      * Determines the number of days within which the book is used.
-     * 
-     * <p>
+     * <p/>
+     * <p/>
      * The minimum value is the one day, i.e. today.
      */
     public int usedWithin() {
@@ -250,8 +251,8 @@ public class SharedBook implements Serializable {
 
     /**
      * Checks that book can be released.
-     * 
-     * <p>
+     * <p/>
+     * <p/>
      * Only user who reserved a book or user who managed a book can release it.
      */
     public boolean canBeReleasedBy(User releasedBy) {
@@ -327,7 +328,7 @@ public class SharedBook implements Serializable {
     /**
      * Returns total number of subscribers.
      */
-     public int getSubscribersNum() {
+    public int getSubscribersNum() {
         return subscribers.size();
     }
 

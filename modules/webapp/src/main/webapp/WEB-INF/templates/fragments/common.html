@@ -35,6 +35,12 @@
                                 <span th:text="#{app.page.search}"></span>
                             </a>
                         </li>
+                        <li>
+                            <a href="#" th:href="@{/addBook}" th:if="${currentUser.manager}">
+                                <span class="glyphicon glyphicon-plus-sign"></span>
+                                <span th:text="#{app.page.offer}"></span>
+                            </a>
+                        </li>
                     </ul>
 
                     <div class="pull-right">
@@ -49,12 +55,6 @@
                             <li>
                                 <a th:href="@{/j_spring_security_logout}">
                                     <span class="glyphicon glyphicon-off"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" th:href="@{/addBook}" th:if="${currentUser.manager}">
-                                    <i class="icon-plus-sign"></i>
-                                    <span th:text="#{app.page.offer}"></span>
                                 </a>
                             </li>
                         </ul>

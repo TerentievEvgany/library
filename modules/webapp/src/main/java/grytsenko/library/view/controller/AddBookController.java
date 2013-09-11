@@ -1,10 +1,12 @@
 package grytsenko.library.view.controller;
 
 import grytsenko.library.model.book.BookDetails;
-import grytsenko.library.model.book.OfferedBook;
+import grytsenko.library.model.book.SharedBook;
+import grytsenko.library.model.book.SharedBookStatus;
 import grytsenko.library.model.user.User;
-import grytsenko.library.service.book.BookNotUpdatedException;
-import grytsenko.library.service.book.ManageOfferedBooksService;
+import grytsenko.library.repository.NotFoundException;
+import grytsenko.library.repository.NotUpdatedException;
+import grytsenko.library.service.book.ManageSharedBooksService;
 import grytsenko.library.service.user.ManageUsersService;
 import grytsenko.library.validator.AddBookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import java.security.Principal;
 
 import static grytsenko.library.view.Navigation.ADD_BOOK_PATH;
 import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
-import static grytsenko.library.view.Navigation.redirectToOfferedBook;
+import static grytsenko.library.view.Navigation.redirectToSharedBook;
 
 /**
  * Processes requests for adding a new book.
@@ -32,14 +34,14 @@ public class AddBookController {
     private AddBookValidator addBookValidator;
 
     @Autowired
-    private ManageOfferedBooksService manageOfferedBooksService;
+    private ManageSharedBooksService sharedBooksService;
 
     @Autowired
     protected ManageUsersService manageUsersService;
 
     @ModelAttribute(CURRENT_USER_ATTR)
-    public User currentUser(Principal principal) {
-        return manageUsersService.find(principal.getName());
+    public User currentUser(Principal principal) throws NotFoundException {
+        return manageUsersService.findByUsername(principal.getName());
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -51,14 +53,16 @@ public class AddBookController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String addBook(BookDetails bookDetails, BindingResult result, @ModelAttribute(CURRENT_USER_ATTR) User user)
-            throws BookNotUpdatedException {
+            throws NotUpdatedException {
         addBookValidator.validate(bookDetails, result);
         if (result.hasErrors()) {
             return "addBook";
         }
-        OfferedBook offeredBook = new OfferedBook();
-        offeredBook.setDetails(bookDetails);
-        manageOfferedBooksService.add(offeredBook, user);
-        return redirectToOfferedBook(offeredBook.getId());
+        SharedBook sharedBook = new SharedBook();
+        sharedBook.setDetails(bookDetails);
+        sharedBook.setManagedBy(user);
+        sharedBook.setStatus(SharedBookStatus.AVAILABLE);
+        sharedBooksService.add(sharedBook, user);
+        return redirectToSharedBook(sharedBook.getId());
     }
 }

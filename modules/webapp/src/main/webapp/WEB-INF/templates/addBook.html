@@ -12,43 +12,69 @@
     <form name="addBookForm" th:object="${bookDetails}" method="POST" class="form-adding">
         <h2 class="form-adding-heading" th:text="#{add.book.title}">Add book</h2>
 
-        <input name="authors" type="text" class="input-block-level"
+        <input name="authors" type="text" class="form-control input-block-top"
              th:placeholder="#{add.book.authors}" th:field="*{authors}"/>
-        <p class="alert-error" th:errors="*{authors}"></p>
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('authors')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{authors}"></span>
+        </div>
 
-        <input name="title" type="text" class="input-block-level"
+        <input name="title" type="text" class="form-control input-block"
             th:placeholder="#{add.book.titles}" th:field="*{title}"/>
-        <p class="alert-error" th:errors="*{title}"></p>
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('title')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{title}"></span>
+        </div>
 
-        <input name="publisher" type="text" class="input-block-level"
+        <input name="publisher" type="text" class="form-control input-block"
             th:placeholder="#{add.book.publisher}" th:field="*{publisher}"/>
-        <p class="alert-error" th:errors="*{publisher}"></p>
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('publisher')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{publisher}"></span>
+        </div>
 
-        <input name="isbn" type="text" class="input-block-level"
+        <input name="isbn" type="text" class="form-control input-block"
             th:placeholder="#{add.book.isbn}" th:field="*{isbn}"/>
-        <p class="alert-error" th:errors="*{isbn}"></p>
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('isbn')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{isbn}"></span>
+        </div>
 
-        <input name="language" type="text" class="input-block-level"
+        <input name="language" type="text" class="form-control input-block"
             th:placeholder="#{add.book.language}" th:field="*{language}"/>
-        <p class="alert-error" th:errors="*{language}"></p>
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('language')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{language}"></span>
+        </div>
 
-        <input name="imageUrl" type="text" class="input-block-level"
+        <input name="imageUrl" type="text" class="form-control input-block"
             th:placeholder="#{add.book.imageUrl}" th:field="*{imageUrl}"/>
-        <p class="alert-error" th:errors="*{imageUrl}"></p>
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('imageUrl')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{imageUrl}"></span>
+        </div>
 
-        <input name="year" type="text" class="input-block-level"
+        <input name="year" type="text" class="form-control input-block"
             th:placeholder="#{add.book.year}" th:field="*{year}"/>
-        <p class="alert-error" th:errors="*{year}"></p>
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('year')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{year}"></span>
+        </div>
 
-        <input name="thumbnailUrl" type="text" class="input-block-level"
+        <input name="thumbnailUrl" type="text" class="form-control input-block"
             th:placeholder="#{add.book.thumbnailUrl}" th:field="*{thumbnailUrl}"/>
-        <p class="alert-error" th:errors="*{thumbnailUrl}"></p>
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('thumbnailUrl')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{thumbnailUrl}"></span>
+        </div>
 
-        <input name="pages" type="text" class="input-block-level"
+        <input name="pages" type="text" class="form-control input-block-bottom"
             th:placeholder="#{add.book.pages}" th:field="*{pages}"/>
-        <p class="alert-error" th:errors="*{pages}"></p>
-
-        <button name="submit" type="submit" class="btn btn-primary"
+        <div class="alert alert-warning alert-dismissable" th:if="${#fields.hasErrors('pages')}" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span th:errors="*{pages}"></span>
+        </div>
+        <button name="submit" type="submit" class="btn btn-lg btn-primary btn-block"
                 th:text="#{add.book}">Add book</button>
     </form>
 </div>

@@ -2,6 +2,7 @@ package grytsenko.library.service.book;
 
 import static grytsenko.library.repository.RepositoryUtils.save;
 import static grytsenko.library.util.DateUtils.now;
+
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
 import grytsenko.library.repository.NotUpdatedException;
@@ -118,6 +119,19 @@ public class ManageSharedBooksService {
                 user.getUsername(), book.getId());
 
         book.removeSubscriber(user);
+        return save(book, sharedBooksRepository);
+    }
+
+    /**
+     * Add an ew book to repository.
+     */
+    @Transactional
+    public SharedBook add(SharedBook book, User user)
+            throws NotUpdatedException {
+        if (!user.isManager()) {
+            throw new NotUpdatedException("User has no permissions.");
+        }
+
         return save(book, sharedBooksRepository);
     }
 
